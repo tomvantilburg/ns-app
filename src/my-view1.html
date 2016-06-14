@@ -9,7 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <dom-module id="my-view1">
 
   <template>
@@ -45,12 +46,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
-    </div>
+
+
+    <template is="dom-repeat" items="stations"></template>
 
   </template>
 
@@ -58,8 +56,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'my-view1'
+      is: 'my-view1',
+      ready: function(){
+        function make_base_auth(user, password) {
+          var tok = user + ':' + password;
+          var hash = btoa(tok);
+          return "Basic " + hash;
+        }
 
+        d3.xml('http://research.geodan.nl/service/nsapi/ns-api-stations-v2')
+        //d3.request('http://webservices.ns.nl/ns-api-stations-v2')
+                //.mimeType("application/xml")
+                .header("Authorization", make_base_auth("tom.van.tilburg@geodan.nl","KURi1Tc-157bZQzsmmWnvF0vVaZOnBiZcfIQ_6MHZJGNTyPQ7yDKZg"))
+                //.user("tom.van.tilburg@geodan.nl")
+                //.password("KURi1Tc-157bZQzsmmWnvF0vVaZOnBiZcfIQ_6MHZJGNTyPQ7yDKZg")
+                //.response(function(xhr) { return xhr.responseXML; })
+                .get(function(xhr) { console.log(xhr.responseXML) });
+      }
     });
 
   </script>
